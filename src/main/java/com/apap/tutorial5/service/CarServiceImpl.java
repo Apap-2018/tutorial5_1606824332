@@ -1,6 +1,7 @@
 package com.apap.tutorial5.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,5 +60,9 @@ public class CarServiceImpl implements CarService{
 		carDb.delete(car);
 	}
 
-	
+	@Override
+	public void saveAll(ArrayList<CarModel> cars) {
+		carDb.saveAll(cars);
+	}
 }
+

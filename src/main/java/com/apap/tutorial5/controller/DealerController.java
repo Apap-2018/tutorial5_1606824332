@@ -42,23 +42,22 @@ public class DealerController {
 	@RequestMapping(value = "/dealer/view")
 	private String viewDealer(@RequestParam(value="dealerId") Long id, Model model) {
 		Optional<DealerModel> dealerOpt = dealerService.getDealerDetailById(id);
-		DealerModel dealer = new DealerModel();
 		if (dealerOpt.isPresent()) {
-			dealer = dealerOpt.get();
+			DealerModel dealer = dealerOpt.get();
+			List<CarModel> carsInDealer = carService.findByDealerOrderByPriceAsc(dealer);
+			dealer.setListCar(carsInDealer);
+			model.addAttribute("dealer", dealer);
+			model.addAttribute("title", "View Dealer");
+			return "view-dealer";
 		}else {
 			List<DealerModel> allDealer = dealerService.viewAll();
-			model.addAttribute("allDealer", allDealer);
-			return "noEntity";
+			for (DealerModel dealer1 : allDealer) {
+				System.out.println(dealer1.getId());
+			}
+//			model.addAttribute("allDealer", allDealer);
+			model.addAttribute("info","DATA YANG DICARI TIDAK ADA! BERIKUT LIST YANG ADA");
+			return this.viewAll(model);
 		}
-		List<CarModel> carsInDealer = carService.findByDealerOrderByPriceAsc(dealer);
-		if (dealer.equals(null)){
-			List<DealerModel> allDealer = dealerService.viewAll();
-			model.addAttribute("allDealer", allDealer);
-		}
-		dealer.setListCar(carsInDealer);
-		model.addAttribute("dealer", dealer);
-		model.addAttribute("title", "View Dealer");
-		return "view-dealer";
 	}
 	
 	@RequestMapping(value = "/dealer/delete/{dealerId}")

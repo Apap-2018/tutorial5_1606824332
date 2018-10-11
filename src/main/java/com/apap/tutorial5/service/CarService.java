@@ -1,4 +1,5 @@
 package com.apap.tutorial5.service;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,4 +20,6 @@ public interface CarService {
 	List<CarModel> findByDealerOrderByPriceAsc(DealerModel dealer);
 	
 	void deleteCar(CarModel car);
+	
+	void saveAll(ArrayList<CarModel> cars);
 }

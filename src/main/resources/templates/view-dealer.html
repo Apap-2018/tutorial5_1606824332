@@ -7,6 +7,9 @@
 		<object th:include="fragments/fragment :: js" th:remove="tag"></object>
 	</head>
 	<body>
+		<div th:insert="fragments/fragment :: navbar">
+		Coba dah ada kagak
+		</div>
 		<nav th:replace="fragments/fragment :: navbar"></nav>
 		<h1 th:text="'Dealer ' + ${dealer.id}"></h1>
 		<p th:text="'Alamat: '+ ${dealer.alamat}"></p>
@@ -38,6 +41,9 @@
 						<td>
 							<input type="checkbox" th:field="*{listCar}" th:value="${car.id}" />
 							<label th:for="${#ids.prev('listCar')}">Hapus</label>
+							<!-- buat ngambil id dari object didalem listCar yang abis diambil -->
+							<!-- <label th:for="*{listCar[__${iterationStatus.index}__].id}">Hapus</label>
+							fungsinya ngedapetin index dari listCar, karena kebetulan aja id sama indexnya sama -->
 						</td>
 					</tr>
 				</tbody>

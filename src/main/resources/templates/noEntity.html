@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<title>500 Internal Server Error</title>
+		<title>Error!</title>
 	</head>
 	
 	<body>
 		<nav th:replace="fragments/fragment :: navbar"></nav>
 		<h2>Tidak ada entity tersebut! Mungkin entity sudah dihapus</h2>
 		<h2>List Dealer:</h2>
-		<p th:each="dealer : ${allDealer}"></p>
-		<p th:text="${dealer.id}"></p>
+		<div th:each="jual : ${allDealer}"></div>
+			<p th:text="${jual.id}"></p>
 	</body>
 </html>

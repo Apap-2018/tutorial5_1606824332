@@ -1,5 +1,8 @@
 package com.apap.tutorial5.controller;
 
+import java.awt.List;
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,30 +21,62 @@ public class CarController {
 	@Autowired
 	private DealerService dealerService;
 	
+//	@RequestMapping(value = "/car/add/{dealerId}", method = RequestMethod.GET)
+//	private String add(@PathVariable(value = "dealerId") Long dealerId, Model model) {
+//		CarModel car = new CarModel();
+//		DealerModel dealer = dealerService.getDealerDetailById(dealerId).get();
+//		car.setDealer(dealer);
+//		
+//		model.addAttribute("car", car);
+//		model.addAttribute("title", "Add Car");
+//		return "addCar";
+//	}
+	
 	@RequestMapping(value = "/car/add/{dealerId}", method = RequestMethod.GET)
 	private String add(@PathVariable(value = "dealerId") Long dealerId, Model model) {
-		CarModel car = new CarModel();
 		DealerModel dealer = dealerService.getDealerDetailById(dealerId).get();
-		car.setDealer(dealer);
+		ArrayList<CarModel> cars = new ArrayList<CarModel>();
+		cars.add(new CarModel());
+		dealer.setListCar(cars);
 		
-		model.addAttribute("car", car);
+		model.addAttribute("dealer", dealer);
 		model.addAttribute("title", "Add Car");
-		return "addCar";
+		return "addCar-dynamic";
 	}
 	
-	@RequestMapping(value="/car/add-dynamic", params={"addRow"})
-	public String addRow(final DealerModel dealer, final BindingResult bindingResult) {
-	    dealer.getListCar().add(new CarModel());
-	    return "insert-dynamic";
+	@RequestMapping(value="/car/add/{dealerId}", params={"addRow"})
+	public String addRow(@ModelAttribute DealerModel dealer, final BindingResult bindingResult, Model model) {
+		if (dealer.getListCar()==null) {
+			dealer.setListCar(new ArrayList<CarModel>());
+		}
+		dealer.getListCar().add(new CarModel());
+		for (int i=0;i<dealer.getListCar().size();i++) {
+			System.out.println(dealer.getListCar().get(i));
+		}
+		model.addAttribute("dealer", dealer);
+	    return "addCar-dynamic";
 	}
 
-	@RequestMapping(value="/car/add-dynamic", params={"removeRow"})
-	public String removeRow(
-	        final DealerModel dealer, final BindingResult bindingResult, 
-	        final HttpServletRequest req) {
+	@RequestMapping(value="/car/add/{dealerId}", params={"removeRow"})
+	public String removeRow(@PathVariable(value = "dealerId") Long dealerId,
+	        @ModelAttribute DealerModel dealer, final BindingResult bindingResult, 
+	        final HttpServletRequest req, Model model) {
 	    final Integer carId = Integer.valueOf(req.getParameter("removeRow"));
+	    System.out.println(carId);
 	    dealer.getListCar().remove(carId.intValue());
-	    return "insert-dynamic";
+	    model.addAttribute("dealer", dealer);
+	    return "addCar-dynamic";
+	}
+	
+	@RequestMapping(value="/car/add/{dealerId}", params={"save"})
+	public String saveRow(@PathVariable(value = "dealerId") Long dealerId,
+			@ModelAttribute DealerModel dealer, final BindingResult bindingResult) {
+		for (CarModel car : dealer.getListCar()) {
+			System.out.println(dealer.getId());
+			car.setDealer(dealer);
+			carService.addCar(car);
+		}
+		return "add";
 	}
 	
 	@RequestMapping(value = "/car/add", method = RequestMethod.POST)
