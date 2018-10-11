@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		
+		<object th:include="fragments/fragment :: title" th:remove="tag"></object>
+		
+		<object th:include="fragments/fragment :: css" th:remove="tag"></object>
+		<object th:include="fragments/fragment :: js" th:remove="tag"></object>
+	</head>
+	
+	<body>
+		<nav th:replace="fragments/fragment :: navbar"></nav>
+		<h2>Hello!</h2>
+		
+		<h3>Tambah Mobil</h3>
+
+		<table>
+		  <thead>
+		    <tr>
+		    	<th>No</th>
+		    	<th>Brand</th>
+				<th>Type</th>
+				<th>Price</th>
+				<th>Amount</th>
+				<th>
+				  <button type="submit" name="addRow" th:action="@{car/add-dynamic/}" th:text="Tambah">Tambah</button>
+				</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr th:each="car,iterStat : *{carList}">
+		      <td th:text="${iterStat.count}">1</td>
+		      <td>
+		        <input type="text" th:field="*{carList[__${iterStat.index}__].brand}" />
+		      </td>
+		      <td>
+		        <input type="text" th:field="*{carList[__${iterStat.index}__].type}" />
+		      </td>
+		      <td>
+		        <input type="text" th:field="*{carList[__${iterStat.index}__].price}" />
+		      </td>
+  		      <td>
+		        <input type="text" th:field="*{carList[__${iterStat.index}__].amount}" />
+		      </td>
+		      <td>
+		        <button type="submit" name="removeRow" 
+		                th:value="${iterStat.index}" th:text="#{dealer.car.remove}">Remove row</button>
+		      </td>
+		    </tr>
+		  </tbody>
+		</table>
+	</body>
+</html>
